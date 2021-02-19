@@ -1,0 +1,37 @@
+<html>
+    <head>
+        <link rel="stylesheet" href="http://promisepoint.com/shared_resources/bootstrap/css/bootstrap.css">
+        <style>
+            input {
+                border: 2px solid currentcolor;
+                border-radius: 5px;
+            }
+            input:invalid {
+                border: 2px solid red;
+            }
+            input:invalid:focus {
+                background-image: linear-gradient(pink, pink);
+            }
+        </style>
+    </head>
+    <body>
+        <h2>Choose your PongTag™</h2>
+        <form>
+            <label for="pongTag">PongTag (between 3 and 20 characters):</label><br>
+            <input type="text" id="pongTag" name="pongTag" required maxlength="20" minlength="3"><br><br>
+            <input id="submitPongTag" type="submit" value="Submit">
+        </form> 
+
+        <script>
+            document.getElementById('submitPongTag').onclick = function(e){
+                e.preventDefault();
+
+                var pongTag = document.getElementById('pongTag').value;
+                if(pongTag.length > 2 && pongTag.length < 21) {
+                    localStorage.setItem('pongTag', pongTag);
+                    window.location.href = '/';
+                }
+            }
+        </script>
+    </body>
+</html>
