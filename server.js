@@ -272,10 +272,12 @@ io.on('connection', function (socket) {
         } else if(
             (((ball.x - (ball.width / 2)) <= (activePlayers[1].x + (activePlayers[1].width / 2))) 
                 && ((ball.y + (ball.width / 2)) >= (activePlayers[1].y - (activePlayers[1].height / 2))) 
-                && ((ball.y - (ball.width / 2)) <= (activePlayers[1].y + (activePlayers[1].height / 2))))
+                && ((ball.y - (ball.width / 2)) <= (activePlayers[1].y + (activePlayers[1].height / 2)))
+                && (ball.x > (activePlayers[1].x - (activePlayers[1].width / 2))))
         || (((ball.x + (ball.width / 2)) >= (activePlayers[2].x - (activePlayers[2].width / 2))) 
                 && ((ball.y + (ball.width / 2)) >= (activePlayers[2].y - (activePlayers[2].height / 2))) 
-                && ((ball.y - (ball.width / 2)) <= (activePlayers[2].y + (activePlayers[2].height / 2))))) {
+                && ((ball.y - (ball.width / 2)) <= (activePlayers[2].y + (activePlayers[2].height / 2))))
+                && (ball.x < (activePlayers[2].x + (activePlayers[2].width / 2)))) {
             collisionCounter = 30;
             calculateTrajectory();
         } else if (ball.x < 0 - ball.width) {
