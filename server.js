@@ -7,6 +7,7 @@ var player2Score = 0;
 var collisionCounter = 0;
 var readyTextCounter = -1;
 var lastGoal = 0;
+var chatMessages = [];
 
 var players = {};
 
@@ -70,12 +71,14 @@ io.on('connection', function (socket) {
         };
 
         socket.on('chatMessage', (msg) => {
+            chatMessages.push({ playerId: socket.id, pongTag: pongTag, message: msg });
             io.emit('chatMessage', { playerId: socket.id, pongTag: pongTag, message: msg });
         });
 
         io.emit('currentPlayers', players);
 
         socket.emit('gameStatus', {player1: activePlayers[1], player2: activePlayers[2], ball: ball});
+        socket.emit('chatMessages', chatMessages);
 
         if(activePlayers[1].pongTag == "")
             io.emit('playerStatus', {player: 1, pongTag: "", status: 'open'});
@@ -295,6 +298,6 @@ io.on('connection', function (socket) {
     }
 });
 
-server.listen(8081, function () {
+server.listen(8081, '0.0.0.0', function () {
     console.log(`Listening on ${server.address().port}`);
 });

@@ -32,7 +32,7 @@ var config = {
 var game = new Phaser.Game(config);
 
 function movePaddle() {
-    if (this.cursors.up.isDown) {
+    if (this.up.isDown) {
         if(player1Name == pongTag){
             socket.emit('movePaddle', {player: 1, direction: 'up'});
         }
@@ -40,7 +40,7 @@ function movePaddle() {
         if(player2Name == pongTag){
             socket.emit('movePaddle', {player: 2, direction: 'up'});
         }
-    } else if(this.cursors.down.isDown) {
+    } else if(this.down.isDown) {
         if(player1Name == pongTag){
             socket.emit('movePaddle', {player: 1, direction: 'down'});
         }
@@ -78,7 +78,9 @@ function preload() {
 }
    
 function create() {
-    cursors = this.input.keyboard.createCursorKeys();
+    up = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.UP);
+    down = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.DOWN);
+    //cursors = this.input.keyboard.createCursorKeys();
 
     socket.on('currentPlayers', function (players) {
         $('.userList').find('ul').empty();
@@ -93,15 +95,41 @@ function create() {
     });
 
     socket.on('chatMessage', function(chatMessage){
-        if(chatMessage.playerId == socket.id){
+        if(chatMessage.pongTag == pongTag)
             var item = '<li class="chatMessage"><span class="chatPongTagSelf">' + chatMessage.pongTag + ': </span><span>' + chatMessage.message + '</span></li>';
-        }
         else
-        {
             var item = '<li class="chatMessage"><span class="chatPongTagOther">' + chatMessage.pongTag + ': </span><span>' + chatMessage.message + '</span></li>';
-        }
         
         $('#messages').append(item);
+        
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    socket.on('chatMessages', function(chatMessages){
+        $('messages').empty();
+        for(i = 0; i < chatMessages.length; i++){
+            if(chatMessages[i].pongTag == pongTag)
+                var item = '<li class="chatMessage"><span class="chatPongTagSelf">' + chatMessages[i].pongTag + ': </span><span>' + chatMessages[i].message + '</span></li>';
+            else
+                var item = '<li class="chatMessage"><span class="chatPongTagOther">' + chatMessages[i].pongTag + ': </span><span>' + chatMessages[i].message + '</span></li>';
+            
+            $('#messages').append(item);
+        }
+        
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+
+    socket.on('chatMessage', function(chatMessages){
+        $('messages').empty();
+        for(i = 0; i < chatMessages.length; i++){
+            if(chatMessages[i].pongTag == pongTag)
+                var item = '<li class="chatMessage"><span class="chatPongTagSelf">' + chatMessages[i].pongTag + ': </span><span>' + chatMessages[i].message + '</span></li>';
+            else
+                var item = '<li class="chatMessage"><span class="chatPongTagOther">' + chatMessages[i].pongTag + ': </span><span>' + chatMessages[i].message + '</span></li>';
+            
+            $('#messages').append(item);
+        }
+        
         window.scrollTo(0, document.body.scrollHeight);
     });
 
